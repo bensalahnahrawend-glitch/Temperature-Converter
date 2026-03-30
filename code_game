@@ -1,0 +1,93 @@
+from tkinter import *
+from PIL  import Image,ImageTk 
+
+def open_close_frame(frame_open,frame_close):
+    frame_close.pack_forget()
+    frame_open.pack(fill="both",expand=True)
+    
+def play_YN(choice):
+    if choice == "yes":
+        open_close_frame(background_game,background)
+        background_game.delete("quitting")
+    if choice == "no":
+        background.create_text(750,600,text="As you like !!",font=("Cooper Black",40))
+
+def stay():
+    background_game.delete("quitting")
+
+def return_to_main():
+    background_game.create_window(650,355,window=quit1,tags="quitting")
+    background_game.create_window(850,355,window=quit2,tags="quitting")
+
+window=Tk()
+window.title("Game : Rock-Paper-Scissors")
+window.geometry("1500x700")
+
+background=Canvas(window,width=1500,height=700)
+background.pack(fill="both",expand=True)
+background_game=Canvas(window,width=1500,height=700)
+background_game.pack(fill="both",expand=True)
+try :
+    img = Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\background.png")
+    img = img.resize((1500, 700))
+    bg_image = ImageTk.PhotoImage(img)
+    background.create_image(0, 0, image=bg_image, anchor="nw")
+except :
+    background.config(bg="lightblue")
+    print("Background image not found, using black.")
+
+background.create_text(750,200,text="ROCK-PAPER-SCISSORS",font=("Cooper Black",85,"bold","underline"))
+
+#Frame_1=Frame(background,bg="lightgreen",bd=15,relief="solid",height=300,width=2000)
+#Frame_1.place(x=-100,y=0)
+Frame_2=Frame(background_game,bg="lightgreen",bd=5,relief="solid",height=700,width=2000)
+background_game.create_window(750,350,window=Frame_2)
+#greeting=Label(Frame_1,text="ROCK-PAPER-SCISSORS",bg="lightgreen",fg="black",borderwidth=5,font=("Cooper Black",85,"bold"))
+#greeting.place(x=90,y=80)
+play_Y=Button(text="Let's Play",fg="black",bg="orange",font=("Cooper Black",40),relief="raised",borderwidth=10,command=lambda : play_YN("yes"))
+background.create_window(450,450,window=play_Y)
+play_N=Button(text="Don't Play",fg="black",bg="orange",font=("Cooper Black",40),relief="raised",borderwidth=10,command=lambda : play_YN("no"))
+background.create_window(1050,450,window=play_N)
+
+return_b=Button(Frame_2,text="MAIN",fg="white",bg="black",font=("Cooper Black",20),relief="raised",borderwidth=10,command=return_to_main)
+return_b.place(x=245,y=625)
+quit1=Button(text="QUIT",bg="black",fg="white",font=("Cooper Black",30), command=lambda : open_close_frame(background,background_game))
+quit2=Button(text="STAY" ,bg="black",fg="white",font=("Cooper Black",30), command=stay)
+
+try :  
+    paper= ImageTk.PhotoImage(Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\paper.png").resize((250, 250)))
+    rock= ImageTk.PhotoImage(Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\rock.png").resize((250, 250)))
+    scissors= ImageTk.PhotoImage(Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\scissors.png").resize((250, 250)))
+
+    btn_rock = Button(Frame_2, image=rock, bg="lightgreen", bd=0 ,relief="solid")
+    btn_rock.place(x=875, y=40)
+
+    btn_paper = Button(Frame_2, image=paper, bg="lightgreen", bd=0 ,relief="solid")
+    btn_paper.place(x=1175, y=40)
+
+    btn_scissors = Button(Frame_2, image=scissors, bg="lightgreen", bd=0 ,relief="solid")
+    btn_scissors.place(x=1475, y=40)
+
+    btn_rock_AUT = Button(Frame_2, image=rock, bg="lightgreen", bd=0 ,relief="solid")
+    btn_rock_AUT.place(x=875, y=400)
+
+    btn_paper_AUT = Button(Frame_2, image=paper, bg="lightgreen", bd=0 ,relief="solid")
+    btn_paper_AUT.place(x=1175, y=400)
+
+    btn_scissors_AUT = Button(Frame_2, image=scissors, bg="lightgreen", bd=0 ,relief="solid")
+    btn_scissors_AUT.place(x=1475, y=400)
+
+except :
+    background_game.config(bg="black")
+    print("Images not found, check your path")
+
+
+Label(Frame_2,text="VS",font=("Cooper Black",70),bg="lightgreen",bd=0).place(x=1230, y=300)
+
+Label(Frame_2,text="Choose your weapon :", font=("Cooper Black",40),bg="lightgreen").place(x=270, y=130)
+Label(Frame_2,text="Computer's weapon :", font=("Cooper Black",40),bg="lightgreen").place(x=270, y=480)
+Label(Frame_2,text="0", font=("Arial black",60),bg="lightgreen").place(x=530, y=207.5)
+Label(Frame_2,text="0", font=("Arial black",60),bg="lightgreen").place(x=530, y=362.5)
+Frame(Frame_2,bg="black",height=15,width=60).place(x=530, y=335)
+
+window.mainloop()

@@ -1,0 +1,224 @@
+from tkinter import *
+from PIL  import Image,ImageTk 
+import random
+
+def main_positions():
+    btn_rock.place(x=875, y=40)
+    btn_paper.place(x=1175, y=40)
+    btn_scissors.place(x=1475, y=40)
+    btn_rock_AUT.place(x=875, y=410)
+    btn_paper_AUT.place(x=1175, y=410)
+    btn_scissors_AUT.place(x=1475, y=410)
+    enable_buttons()
+
+def open_close_frame(frame_open,frame_close):
+    frame_close.pack_forget()
+    frame_open.pack(fill="both",expand=True)
+    main_positions()
+    
+def play_YN(choice):
+    if choice == "yes":
+        open_close_frame(background_game,background)
+        background_game.delete("quitting")
+        initialisation()
+    if choice == "no":
+        background.create_text(750,600,text="As you like !!",font=("Cooper Black",40))
+
+def stay():
+    background_game.delete("quitting")
+    enable_buttons()
+
+def return_to_main():
+    background_game.create_window(650,355,window=quit1,tags="quitting")
+    background_game.create_window(850,355,window=quit2,tags="quitting")
+    disable_buttons()
+
+
+def gamer_weapon(weapon):
+    if weapon == "rock":
+        btn_paper.place_forget()
+        btn_scissors.place_forget()
+        btn_rock.place(x=1175, y=40)
+    if weapon =="paper":
+        btn_rock.place_forget()
+        btn_scissors.place_forget()
+        btn_paper.place(x=1175, y=40)
+    if weapon == "scissors":
+        btn_paper.place_forget()
+        btn_rock.place_forget()
+        btn_scissors.place(x=1175, y=40)
+    Computer_weapon_v=computer_weapon()
+    score(weapon,Computer_weapon_v)
+
+def computer_weapon():
+    weapon = random.choice(weapons)
+    if weapon == "rock":
+        btn_paper_AUT.place_forget()
+        btn_scissors_AUT.place_forget()
+        btn_rock_AUT.place(x=1175, y=410)
+    if weapon == "paper":
+        btn_rock_AUT.place_forget()
+        btn_scissors_AUT.place_forget()
+        btn_paper_AUT.place(x=1175, y=410)
+    if weapon == "scissors":
+        btn_paper_AUT.place_forget()
+        btn_rock_AUT.place_forget()
+        btn_scissors_AUT.place(x=1175, y=410)
+    return weapon
+
+def score(gamer,computer):
+    global score_gamer,score_ordinateur,round,replay_b
+    if gamer==computer:
+        score_ordinateur+=0
+    elif ((computer=="rock")&(gamer=="paper"))| ((computer=="paper")&(gamer=="scissors"))|((computer=="scissors")&(gamer=="rock")):
+        score_gamer +=1
+    else:
+        score_ordinateur+=1
+    A1.config(text=str(score_gamer))
+    A2.config(text=str(score_ordinateur))
+
+    round += 1
+    round_num.config(text=f"round {round}/3")
+    if round >= nbre_rounds:
+        window.after(1000, result)
+        disable_buttons()
+        replay_b=Button(Frame_2,text="REPLAY",fg="white",bg="black",font=("Cooper Black",20),relief="raised",borderwidth=10, command=initialisation)
+        replay_b.place(x=1585,y=625)
+    else:
+        window.after(1000, main_positions)
+        disable_buttons()
+
+def disable_buttons():
+    btn_rock.config(state="disabled")
+    btn_paper.config(state="disabled")
+    btn_scissors.config(state="disabled")
+
+def enable_buttons():
+    btn_rock.config(state="normal")
+    btn_paper.config(state="normal")
+    btn_scissors.config(state="normal")
+        
+def result():
+    global res
+    if score_gamer>score_ordinateur :
+        A1.place_forget()
+        A2.place_forget()
+        sep.place_forget()
+        res=Label(Frame_2,text="YOU WON !!!", font=("Cooper Black",60),bg="lightgreen",fg="red")
+        res.place(x=300, y=335)
+    elif score_gamer<score_ordinateur :
+        A1.place_forget()
+        A2.place_forget()
+        sep.place_forget()
+        res=Label(Frame_2,text="YOU LOST !!!", font=("Cooper Black",60),bg="lightgreen",fg="red")
+        res.place(x=300, y=335)
+    else :
+        A1.place_forget()
+        A2.place_forget()
+        sep.place_forget()
+        res=Label(Frame_2,text="DRAW !!!", font=("Cooper Black",60),bg="lightgreen",fg="red")
+        res.place(x=350, y=335)
+    A1.place(x=400, y=200)
+    sep.place(x=500, y=250)
+    A2.place(x=600, y=200)
+
+def initialisation():
+    global score_gamer,score_ordinateur,round
+    score_gamer = 0
+    score_ordinateur = 0
+    round = 0
+    try:
+        res.place_forget()
+        replay_b.place_forget()
+    except:
+        pass   
+    main_positions()
+    A1.config(text="0")
+    A2.config(text="0")
+    A1.place(x=530, y=207.5)
+    A2.place(x=530, y=362.5)
+    sep.place(x=530, y=335)
+
+
+weapons=["rock","paper","scissors"]
+score_gamer=0
+score_ordinateur=0
+nbre_rounds=3
+round=0
+window=Tk()
+window.title("Game : Rock-Paper-Scissors")
+window.geometry("1500x700")
+
+background=Canvas(window,width=1500,height=700)
+background.pack(fill="both",expand=True)
+background_game=Canvas(window,width=1500,height=700)
+background_game.pack(fill="both",expand=True)
+try :
+    img = Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\background.png")
+    img = img.resize((1500, 700))
+    bg_image = ImageTk.PhotoImage(img)
+    background.create_image(0, 0, image=bg_image, anchor="nw")
+except :
+    background.config(bg="lightblue")
+    print("Background image not found, using black.")
+
+background.create_text(750,200,text="ROCK-PAPER-SCISSORS",font=("Cooper Black",85,"bold","underline"))
+
+Frame_2=Frame(background_game,bg="lightgreen",bd=5,relief="solid",height=700,width=2000)
+background_game.create_window(750,350,window=Frame_2)
+
+play_Y=Button(text="Let's Play",fg="black",bg="orange",font=("Cooper Black",40),relief="raised",borderwidth=10,command=lambda : play_YN("yes"))
+background.create_window(450,450,window=play_Y)
+
+play_N=Button(text="Don't Play",fg="black",bg="orange",font=("Cooper Black",40),relief="raised",borderwidth=10,command=lambda : play_YN("no"))
+background.create_window(1050,450,window=play_N)
+
+return_b=Button(Frame_2,text="MAIN",fg="white",bg="black",font=("Cooper Black",20),relief="raised",borderwidth=10,command=return_to_main)
+return_b.place(x=245,y=625)
+
+quit1=Button(text="QUIT",bg="black",fg="white",font=("Cooper Black",30), command=lambda : open_close_frame(background,background_game))
+quit2=Button(text="STAY" ,bg="black",fg="white",font=("Cooper Black",30), command=stay)
+
+round_num=Label(Frame_2,text=f"round {round}/3", font=("Cooper Black",30),bg="lightgreen",fg="blue")
+round_num.place(x=450,y=50)
+
+try :  
+    paper= ImageTk.PhotoImage(Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\paper.png").resize((250, 250)))
+    rock= ImageTk.PhotoImage(Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\rock.png").resize((250, 250)))
+    scissors= ImageTk.PhotoImage(Image.open(r"C:\Users\Aouadi Mohamed Ali\Desktop\Images needed\scissors.png").resize((250, 250)))
+
+    btn_rock = Button(Frame_2, image=rock, bg="lightgreen", bd=0 ,relief="solid",command=lambda : gamer_weapon('rock'))
+    btn_rock.place(x=875, y=40)
+
+    btn_paper = Button(Frame_2, image=paper, bg="lightgreen", bd=0 ,relief="solid",command=lambda : gamer_weapon('paper'))
+    btn_paper.place(x=1175, y=40)
+
+    btn_scissors = Button(Frame_2, image=scissors, bg="lightgreen", bd=0 ,relief="solid",command=lambda : gamer_weapon('scissors'))
+    btn_scissors.place(x=1475, y=40)
+
+    btn_rock_AUT = Button(Frame_2, image=rock, bg="lightgreen", bd=0 ,relief="solid")
+    btn_rock_AUT.place(x=875, y=410)
+
+    btn_paper_AUT = Button(Frame_2, image=paper, bg="lightgreen", bd=0 ,relief="solid")
+    btn_paper_AUT.place(x=1175, y=410)
+
+    btn_scissors_AUT = Button(Frame_2, image=scissors, bg="lightgreen", bd=0 ,relief="solid")
+    btn_scissors_AUT.place(x=1475, y=410)
+
+
+except :
+    background_game.config(bg="black")
+    print("Images not found, check your path")
+
+Label(Frame_2,text="VS",font=("Cooper Black",70),bg="lightgreen",bd=0).place(x=1230, y=300)
+
+A1=Label(Frame_2,text=str(score_gamer), font=("Arial black",60),bg="lightgreen")
+A1.place(x=530, y=207.5)
+A2=Label(Frame_2,text=str(score_ordinateur), font=("Arial black",60),bg="lightgreen")
+A2.place(x=530, y=362.5)
+Label(Frame_2,text="Choose your weapon :", font=("Cooper Black",40),bg="lightgreen").place(x=270, y=130)
+Label(Frame_2,text="Computer's weapon :", font=("Cooper Black",40),bg="lightgreen").place(x=270, y=480)
+sep=Frame(Frame_2,bg="black",height=15,width=60)
+sep.place(x=530, y=335)
+
+window.mainloop()
